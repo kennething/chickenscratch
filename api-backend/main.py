@@ -44,4 +44,4 @@ async def detect_letters(data: ImageRequest):
          'class': int(cls)
     })
 
- return {'detections': results}
+ return {'detections': results.json()}
