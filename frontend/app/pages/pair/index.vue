@@ -12,6 +12,34 @@ definePageMeta({
   background: "grove"
 });
 
+const images = [
+  "/backgrounds/reef/base.webp",
+  "/backgrounds/reef/layer-1.webp",
+  "/backgrounds/reef/layer-2.webp",
+  "/backgrounds/reef/layer-3.webp",
+  "/backgrounds/reef-2/base.webp",
+  "/backgrounds/reef-2/layer-1.webp",
+  "/backgrounds/reef-2/layer-2.webp",
+  "/backgrounds/reef-2/layer-3.webp",
+  "/backgrounds/dory/base.webp",
+  "/backgrounds/dory/layer-1.webp",
+  "/backgrounds/dory/layer-2.webp",
+  "/backgrounds/dory-2/base.webp",
+  "/backgrounds/dory-2/layer-1.webp",
+  "/backgrounds/dory-2/layer-2.webp",
+  "/backgrounds/pond-2/base.webp",
+  "/backgrounds/pond-2/layer-1.webp",
+  "/backgrounds/pond-2/layer-2.webp"
+] as const;
+
+useHead({
+  link: images.map((src) => ({
+    rel: "preload",
+    as: "image",
+    href: src
+  }))
+});
+
 const { $socket } = useNuxtApp();
 
 const userStore = useUserStore();

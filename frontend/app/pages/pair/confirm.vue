@@ -13,7 +13,7 @@
           >
             <p class="text-2xl text-white">Yes</p>
             <img class="size-28 group-hover:hidden" src="/sprites/chicken/neutral.webp" aria-hidden="true" />
-            <img class="hidden size-28 group-hover:block group-hover:scale-110" src="/sprites/chicken/proud.webp" aria-hidden="true" />
+            <img class="hidden size-28 group-hover:block group-hover:scale-110" src="/sprites/chicken/hehe.webp" aria-hidden="true" />
           </div>
         </Transition>
         <VideoFeed class="overflow-hidden rounded-4xl" />
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  background: "mountains",
+  background: "pond",
   middleware: "has-pair"
 });
 

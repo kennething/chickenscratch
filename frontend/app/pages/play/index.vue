@@ -9,7 +9,7 @@
         <div class="relative h-5 w-full overflow-hidden rounded-full bg-neutral-600">
           <div class="absolute top-0 left-0 h-full bg-green-500" :style="{ width: `${(stageTimer / 1000 / (20 + currentStage * 10)) * 100}%` }"></div>
         </div>
-        <p class="text-2xl text-black">00:{{ String(Math.floor(stageTimer / 1000)).padStart(2, "0") }}:{{ String(stageTimer % 1000).padStart(3, "0") }}</p>
+        <p class="text-2xl text-black">00:{{ String(Math.max(Math.floor(stageTimer / 1000), 0)).padStart(2, "0") }}:{{ String(Math.max(stageTimer % 1000, 0)).padStart(3, "0") }}</p>
       </div>
 
       <div class="relative flex h-32 w-full items-center justify-center overflow-x-hidden overflow-y-clip" v-if="currentWordIndex !== undefined">

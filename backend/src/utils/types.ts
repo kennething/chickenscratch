@@ -150,6 +150,7 @@ export class Match {
     });
     const data = (await res.json()) as string[];
 
+    console.log("aaaaaa", data, currentWord);
     if (data.join("").includes(currentWord)) return true;
     return false;
   }

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  background: "grove-2",
+  background: "pond-2",
   middleware: "has-pair",
   layout: "connected"
 });
