@@ -29,12 +29,6 @@ def convert_base64_to_image(base64_string):          # converts JSON Blob/Base64
     if "," in base64_string:
         base64_string = base64_string.split(",")[1]
     img_data = base64.b64decode(base64_string)
-    np_arr = np.frombuffer(img_data, np.uint8)
-    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-    if img is not None:
-        print(f"Decoded image shape: {img.shape}, dtype: {img.dtype}")
-    else:
-        print("ERROR: cv2.imdecode returned None")
     return img
 
 @app.get("/")
@@ -54,8 +48,9 @@ async def detect_letters(data: ImageRequest):
     img = convert_base64_to_image(data.image)
     if img is None:
         return JSONResponse(status_code=400, content={"error": "Invalid image data"}) #sends a 400 Bad Request response if the image data is invalid
-
-    detections = model.predict(img, conf=0.25)
+    with open("output.jpg", "wb") as f:
+        f.write(img)
+    detections = model.predict("output.jpg", conf=0.25)
 
     # Extract bounding box data
     boxes = detections[0].boxes.xyxy.cpu().numpy()
