@@ -28,7 +28,7 @@ export class Match {
    *
    * `currentWord` = `-1` if the player hasnt confirmed the match, 0 otherwise
    */
-  players: [playerUuid: UUID, currentWord: number, confirmMatch: CallbackFn | null][];
+  players: [playerUuid: UUID, currentWord: number, confirmMatch: CallbackFn<string[]> | null][];
   /** current split of the match */
   currentSplit = MatchSplit.Easy;
   /** time remaining on the current split */
@@ -40,17 +40,18 @@ export class Match {
   private onAdvanceSplit: (newSplit: MatchSplit, newWord: string) => void;
   private onEndGame: () => void;
 
-  constructor(playerUuids: SocketType[], onAdvanceSplit: (newSplit: MatchSplit, newWord: string) => void, onEndGame: () => void) {
+  constructor(players: SocketType[], onAdvanceSplit: (newSplit: MatchSplit, newWord: string) => void, onEndGame: () => void) {
     this.uuid = randomUUID();
-    this.players = playerUuids.map((socket) => [socket.data.uuid!, -1, null]);
+    this.players = players.map((socket) => [socket.data.uuid!, -1, null]);
     this.onAdvanceSplit = onAdvanceSplit;
     this.onEndGame = onEndGame;
 
+    const filteredWordList = wordList.filter((word) => word.length <= 3);
     const words = new Set<string>();
-    for (let i = 0; i < 20; i++) words.add(getRandomItem(wordList.filter((word) => word.length <= 3)));
+    for (let i = 0; i < 20; i++) words.add(getRandomItem(filteredWordList));
     this.currentWords = Array.from(words);
 
-    playerUuids.forEach((socket) => (socket.data.matchUuid = this.uuid));
+    players.forEach((socket) => (socket.data.matchUuid = this.uuid));
     matches.set(this.uuid, this);
   }
 
@@ -58,17 +59,16 @@ export class Match {
    *
    * also starts the game after 3 seconds
    */
-  setCallback(playerUuid: UUID, callback: CallbackFn): void {
+  setCallback(playerUuid: UUID, callback: CallbackFn<string[]>): void {
     const player = this.players.find(([uuid]) => uuid === playerUuid);
     if (!player) return;
 
     player[2] = callback;
     player[1] = 0;
 
-    if (this.players.some(([, currentWord]) => currentWord !== -1)) return;
-
-    this.players.forEach(([_, __, callback]) => callback?.(true, this.currentWords[0]));
-    setInterval(this.startMatch, 3000);
+    if (this.players.some(([, currentWord]) => currentWord === -1)) return;
+    this.players.forEach(([_, __, callback]) => callback?.(true, this.currentWords.slice(0, 2)));
+    setInterval(() => this.startMatch(), 3000 + 1500); // ? 1.5s page transition
   }
 
   /** validates a word, and returns the next word if correct
@@ -85,24 +85,47 @@ export class Match {
     if (!player) return [false, null];
 
     if (isCorrect) player[1]++;
-    if (player[1] >= this.currentWords.length - 3) for (let i = 0; i < 10; i++) this.currentWords.push(getRandomItem(wordList.filter((word) => word.length <= 3 + this.currentSplit * 2)));
+    if (player[1] >= this.currentWords.length - 3) {
+      const filteredWordList = wordList.filter((word) => (this.currentSplit === MatchSplit.Hard ? true : word.length <= 3 + this.currentSplit * 2));
+      for (let i = 0; i < 10; i++) this.currentWords.push(getRandomItem(filteredWordList));
+    }
 
-    return [true, this.currentWords[player[1]]];
+    return [true, this.currentWords[player[1] + 1]];
   }
 
-  /** starts the match */
   private startMatch(): void {
+    if (this.interval) return;
+
     this.interval = setInterval(() => {
-      if (this.timeRemaining === 0) return this.advanceSplit();
+      if (this.timeRemaining === 0) {
+        clearInterval(this.interval);
+        return this.advanceSplit();
+      }
       this.timeRemaining--;
     }, 1000);
   }
 
   private advanceSplit(): void {
     if (this.currentSplit === MatchSplit.Hard) return this.endMatch();
+
     this.currentSplit++;
     this.timeRemaining = 20 + this.currentSplit * 10; // ? 30s for medium, 40s for hard
+
+    this.currentWords.length = 0;
+    const words = new Set<string>();
+    const filteredWordList = wordList.filter((word) => (this.currentSplit === MatchSplit.Hard ? true : word.length <= 3 + this.currentSplit * 2));
+    for (let i = 0; i < 20; i++) words.add(getRandomItem(filteredWordList));
+    this.currentWords = Array.from(words);
+
     this.onAdvanceSplit(this.currentSplit, this.currentWords[0]);
+
+    this.interval = setInterval(() => {
+      if (this.timeRemaining === 0) {
+        clearInterval(this.interval);
+        return this.advanceSplit();
+      }
+      this.timeRemaining--;
+    }, 1000);
   }
 
   private endMatch(): void {

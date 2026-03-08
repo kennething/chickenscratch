@@ -5,6 +5,8 @@ export type CallbackFn<T = string> = (success: boolean, data?: T) => void;
 export interface ServerToClientEvents {
   /** send a frame blob to main socket */
   getFrame: (blob: ArrayBuffer) => void;
+  /** send result of frame processing to main socket */
+  getResult: (isCorrect: boolean, nextWord?: string) => void;
 
   /** send to camera socket to confirm pair was accepted
    * @param callback acknowledge that the camera is centered
@@ -24,10 +26,8 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  /** send a frame blob from camera socket
-   * @param callback whether the frame was successfully processed (whether the word was correct)
-   */
-  pollFrame: (blob: Blob, callback: CallbackFn) => void;
+  /** send a frame blob from camera socket */
+  pollFrame: (blob: Blob) => void;
 
   /** sets the socket as a main socket and get a pairing code back
    * @param callback gives pairing code to main socket so it can generate qr code
@@ -47,9 +47,9 @@ export interface ClientToServerEvents {
    */
   joinQueue: (callback: CallbackFn) => void;
   /** sent by main socket to confirm player is ready for a match
-   * @param callback receive when the game starts, has `newWord` parameter for first word of match
+   * @param callback receive when the game starts
    */
-  confirmMatch: (callback: CallbackFn) => void;
+  confirmMatch: (callback: CallbackFn<[newWord1: string, newWord2: string]>) => void;
 }
 
 export interface InterServerEvents {}

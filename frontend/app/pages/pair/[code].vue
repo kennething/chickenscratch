@@ -67,7 +67,7 @@ async function getCamera() {
     if (settings?.torch) track?.applyConstraints({ advanced: [{ torch: true }] });
     video.value.srcObject = stream.value;
     video.value.play();
-    interval = setInterval(emitFrame, 500);
+    interval = setInterval(emitFrame, 5000);
   } catch (error) {
     console.error("error accessing camera:", error);
   }
@@ -95,8 +95,7 @@ function emitFrame() {
   const quality = 0.5 as const;
   canvas.toBlob(
     (blob) => {
-      // TODO: add callback
-      if (blob) $socket.emit("pollFrame", blob, () => {});
+      if (blob) $socket.emit("pollFrame", blob);
     },
     "image/webp",
     quality
@@ -107,7 +106,11 @@ const pairingConfirmed = ref(false);
 const confirmCentered = ref<CallbackFn>();
 const centerConfirmed = ref(false);
 onMounted(() => {
-  if (!$socket.hasListeners("terminatePairing")) $socket.on("terminatePairing", () => window.close());
+  if (!$socket.hasListeners("terminatePairing"))
+    $socket.on("terminatePairing", () => {
+      window.close();
+      navigateTo("/");
+    });
   if (!$socket.hasListeners("pairingConfirmed"))
     $socket.on("pairingConfirmed", (callback) => {
       pairingConfirmed.value = true;

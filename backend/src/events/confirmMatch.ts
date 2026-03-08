@@ -2,7 +2,7 @@ import { ServerType, SocketType } from "../utils/types";
 import { CallbackFn } from "../utils/events";
 import { matches } from "../utils/data";
 
-export function confirmMatch(io: ServerType, socket: SocketType, callback: CallbackFn): void {
+export function confirmMatch(io: ServerType, socket: SocketType, callback: CallbackFn<string[]>): void {
   const matchUuid = socket.data.matchUuid;
   if (!matchUuid) return callback(false);
 

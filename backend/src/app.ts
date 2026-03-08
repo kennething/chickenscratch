@@ -1,4 +1,4 @@
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from "./utils/events";
+import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData, CallbackFn } from "./utils/events";
 import express, { Router } from "express";
 import { createServer } from "https";
 import { Server } from "socket.io";
@@ -28,7 +28,7 @@ const server = createServer({ key: fs.readFileSync("key.pem"), cert: fs.readFile
 const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, { cors: {} });
 
 io.on("connection", (socket) => {
-  socket.on("pollFrame", (blob) => events.pollFrame(socket, blob as unknown as ArrayBuffer));
+  socket.on("pollFrame", (blob) => events.pollFrame(io, socket, blob as unknown as ArrayBuffer));
 
   socket.on("connectMainSocket", (callback) => events.connectMainSocket(socket, callback));
   socket.on("pair", (code, callback) => events.pair(io, socket, code as UUID, callback));
@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
   socket.on("terminatePairing", () => events.terminatePairing(io, socket));
 
   socket.timeout(99_999_999).on("joinQueue", (callback) => queue.push({ socket, callback }));
-  socket.timeout(99_999_999).on("confirmMatch", (callback) => events.confirmMatch(io, socket, callback));
+  socket.timeout(99_999_999).on("confirmMatch", (callback) => events.confirmMatch(io, socket, callback as CallbackFn<string[]>));
 });
 
 setInterval(() => {

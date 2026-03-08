@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center" v-if="currentImage">
-    <img :src="currentImage" aria-hidden="true" />
+    <img :src="currentImage" aria-hidden="true" class="h-full w-full" />
   </div>
 </template>
 

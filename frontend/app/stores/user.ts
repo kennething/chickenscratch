@@ -7,7 +7,8 @@ export const useUserStore = defineStore("userStore", () => {
     position: "right" as "left" | "right"
   });
 
-  const currentWord = ref<string>();
+  const currentWordIndex = ref<number>();
+  const wordHistory = ref<string[]>([]);
 
-  return { pairingCode, currentBackground, videoFeedOptions, currentWord };
+  return { pairingCode, currentBackground, videoFeedOptions, currentWordIndex, wordHistory };
 });
