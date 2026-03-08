@@ -29,7 +29,8 @@ where `<ip>` is your local network IP address, which you can find somewhere prob
 5. create .env
 
 ```sh
-FRONTEND_URL=https://<ip>:3000
+FRONTEND_URL=https://<ip>:3000 # url of the frontend
+BACKEND_URL=https://<ip>:8000 # url of the model backend server
 ```
 
 6. run the server

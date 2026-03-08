@@ -35,54 +35,68 @@ const animationSpeed = 1000 as const;
 // jank cuz vue doesnt react to [tuple][] for some fucking reason
 const activeBackgrounds = ref<Background[]>([]);
 const activeBackgroundRevealIndices = ref<number[]>([]);
+const backgroundQueue = ref<Background>();
 watch(
   () => props.background,
   (val) => {
-    if (activeBackgrounds.value.length) {
-      const background = activeBackgrounds.value[0]!;
-      const interval = setInterval(
-        () => {
-          const currentIndex = activeBackgroundRevealIndices.value[0];
-          if (currentIndex === undefined || currentIndex <= -1) return clearInterval(interval);
-          activeBackgroundRevealIndices.value[0]!--;
-        },
-        animationSpeed / 2 / backgrounds[background]
-      );
-      setTimeout(() => {
-        activeBackgrounds.value.shift();
-        activeBackgroundRevealIndices.value.shift();
-      }, animationSpeed * 2);
-    }
+    if (activeBackgrounds.value.length >= 2) return (backgroundQueue.value = val);
+    if (activeBackgrounds.value.length) clearBackground();
     if (!val) return;
 
-    activeBackgrounds.value.push(val);
-    const length = activeBackgroundRevealIndices.value.push(-1);
-    setTimeout(() => {
-      const interval = setInterval(
-        () => {
-          const currentIndex = activeBackgroundRevealIndices.value[length - 1];
-          if (currentIndex === undefined || currentIndex >= backgrounds[val]) return clearInterval(interval);
-          activeBackgroundRevealIndices.value[length - 1]!++;
-        },
-        animationSpeed / 2 / backgrounds[val]
-      );
-    }, animationSpeed / 2);
+    addBackground(val);
   },
   { immediate: true }
 );
+watch(activeBackgrounds, (val) => {
+  if (val.length < 2 && backgroundQueue.value) {
+    if (val.length) clearBackground();
+    addBackground(backgroundQueue.value);
+    backgroundQueue.value = undefined;
+  }
+});
+
+function clearBackground() {
+  const background = activeBackgrounds.value[0]!;
+  const interval = setInterval(
+    () => {
+      const currentIndex = activeBackgroundRevealIndices.value[0];
+      if (currentIndex === undefined || currentIndex <= -1) return clearInterval(interval);
+      activeBackgroundRevealIndices.value[0]!--;
+    },
+    animationSpeed / 2 / backgrounds[background]
+  );
+  setTimeout(() => {
+    activeBackgrounds.value.shift();
+    activeBackgroundRevealIndices.value.shift();
+  }, animationSpeed * 2);
+}
+function addBackground(val: Background) {
+  activeBackgrounds.value.push(val);
+  const length = activeBackgroundRevealIndices.value.push(-1);
+  setTimeout(() => {
+    const interval = setInterval(
+      () => {
+        const currentIndex = activeBackgroundRevealIndices.value[length - 1];
+        if (currentIndex === undefined || currentIndex >= backgrounds[val]) return clearInterval(interval);
+        activeBackgroundRevealIndices.value[length - 1]!++;
+      },
+      animationSpeed / 2 / backgrounds[val]
+    );
+  }, animationSpeed / 2);
+}
 </script>
 
 <style scoped>
 @keyframes bounce-in {
   0% {
-    transform: translateY(100svh);
+    transform: translateY(50svh);
     opacity: 0;
   }
   50% {
     opacity: 1;
   }
   70% {
-    transform: translateY(-10svh);
+    transform: translateY(-5svh);
   }
   100% {
     transform: translateY(0);
