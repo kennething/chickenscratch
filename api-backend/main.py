@@ -12,7 +12,6 @@ import io
 
 app = FastAPI()
 
-# Allow all CORS (frontend <-> backend)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,7 +32,6 @@ def convert_to_cv2_image(image_input: Union[str, bytes]):
     Converts Base64 string or raw bytes into an OpenCV image (numpy.ndarray)
     """
     if isinstance(image_input, str):
-        # If Base64, remove data URL prefix
         if "," in image_input:
             image_input = image_input.split(",")[1]
         image_bytes = base64.b64decode(image_input)
@@ -42,7 +40,6 @@ def convert_to_cv2_image(image_input: Union[str, bytes]):
     else:
         raise ValueError("Image must be a Base64 string or raw bytes")
 
-    # Convert bytes  numpy array  OpenCV image
     np_arr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
