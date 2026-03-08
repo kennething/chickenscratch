@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import numpy as np
 from ultralytics import YOLO
+import tempfile
 
 app = FastAPI()
 
@@ -25,12 +26,24 @@ class ImageRequest(BaseModel):
 model = YOLO("best.pt")
 
 
-def convert_base64_to_image(base64_string):          # converts JSON Blob/Base64 string to an OpenCV image
+def convert_base64_to_temp_jpg(base64_string):
+    # Remove data URL prefix if present
     if "," in base64_string:
         base64_string = base64_string.split(",")[1]
-    img_data = base64.b64decode(base64_string)
-    return img
 
+    # Decode base64 → bytes
+    img_data = base64.b64decode(base64_string)
+
+    # Create temporary jpg file
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+
+    # Write image bytes
+    with open(temp_file.name, "wb") as f:
+        f.write(img_data)
+
+    # Return file path as string
+    return temp_file.name
+  
 @app.get("/")
 async def root():
     return {"Api": "API is running"}
@@ -48,9 +61,7 @@ async def detect_letters(data: ImageRequest):
     img = convert_base64_to_image(data.image)
     if img is None:
         return JSONResponse(status_code=400, content={"error": "Invalid image data"}) #sends a 400 Bad Request response if the image data is invalid
-    with open("output.jpg", "wb") as f:
-        f.write(img)
-    detections = model.predict("output.jpg", conf=0.25)
+    detections = model.predict(img, conf=0.25)
 
     # Extract bounding box data
     boxes = detections[0].boxes.xyxy.cpu().numpy()
