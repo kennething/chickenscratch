@@ -1,21 +1,21 @@
 <template>
   <div class="ml-104 flex min-h-svh w-[calc(100vw-26rem)] flex-col items-center justify-center px-10">
     <div v-show="countdown > -1" class="flex flex-col items-center justify-center gap-4">
-      <h1>Get ready!</h1>
-      <p>{{ countdown }}</p>
+      <h1 class="text-3xl font-medium text-black">Get ready!</h1>
+      <p class="title px-6 py-3 text-6xl font-medium text-black">{{ countdown }}</p>
     </div>
     <div v-show="countdown === -1" class="flex min-h-svh w-full flex-col items-center justify-between gap-4 py-6">
-      <div class="flex w-3/4 flex-col">
+      <div class="flex w-3/4 flex-col items-center justify-center">
         <div class="relative h-5 w-full overflow-hidden rounded-full bg-neutral-600">
           <div class="absolute top-0 left-0 h-full bg-green-500" :style="{ width: `${(stageTimer / 1000 / (20 + currentStage * 10)) * 100}%` }"></div>
         </div>
-        <p>{{ String(stageTimer).padStart(2, "0") }}:{{ String(stageTimer % 1000).padStart(3, "0") }}</p>
+        <p class="text-2xl text-black">00:{{ String(Math.floor(stageTimer / 1000)).padStart(2, "0") }}:{{ String(stageTimer % 1000).padStart(3, "0") }}</p>
       </div>
 
-      <div class="relative flex h-20 w-full items-center justify-center overflow-hidden" v-if="currentWordIndex !== undefined">
+      <div class="relative flex h-32 w-full items-center justify-center overflow-x-hidden overflow-y-clip" v-if="currentWordIndex !== undefined">
         <p
           v-for="(word, index) in wordHistory"
-          class="absolute top-0 left-1/2 w-40 -translate-x-1/2 text-center text-3xl transition duration-1000 ease-[cubic-bezier(.8,0,.2,1)] select-none"
+          class="absolute top-1/2 left-1/2 w-40 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white/50 px-4 py-1 text-center text-3xl transition duration-1000 ease-[cubic-bezier(.8,0,.2,1)] select-none"
           :class="index === currentWordIndex ? 'scale-175 text-black' : 'text-neutral-600'"
           :style="{ transform: `translateX(${(index - currentWordIndex) * 200}%)` }"
         >
@@ -23,7 +23,7 @@
         </p>
       </div>
 
-      <p class="text-xl font-bold">
+      <p class="text-2xl font-bold text-white">
         Stage <span :class="{ 'holy-cow': stageIsChanging }">{{ currentStage }}</span>
       </p>
     </div>
@@ -88,7 +88,7 @@ onMounted(() => {
   if (!$socket.hasListeners("endGame"))
     $socket.on("endGame", (didWin) => {
       gameWon.value = didWin;
-      navigateTo("/play/results");
+      // navigateTo("/play/results");
     });
 });
 onBeforeUnmount(() => {

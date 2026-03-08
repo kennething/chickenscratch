@@ -5,11 +5,29 @@
 
       <div class="flex w-full items-center justify-around">
         <Transition name="confirmation-button">
-          <button v-show="!isPaired" class="rounded-xl bg-neutral-300 px-20 py-5 text-2xl" @click="confirmPair">yes</button>
+          <div
+            role="button"
+            v-show="!isPaired"
+            class="group flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-double border-lime-300 bg-lime-300/25 px-14 py-5 transition hover:bg-lime-300/50"
+            @click="confirmPair"
+          >
+            <p class="text-2xl text-white">Yes</p>
+            <img class="size-28 group-hover:hidden" src="/sprites/chicken/neutral.webp" aria-hidden="true" />
+            <img class="hidden size-28 group-hover:block group-hover:scale-110" src="/sprites/chicken/proud.webp" aria-hidden="true" />
+          </div>
         </Transition>
         <VideoFeed class="overflow-hidden rounded-4xl" />
         <Transition name="confirmation-button">
-          <button v-show="!isPaired" class="rounded-xl bg-neutral-300 px-20 py-5 text-2xl" @click="$socket.emit('terminatePairing')">no</button>
+          <div
+            role="button"
+            v-show="!isPaired"
+            class="group flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-double border-neutral-300 bg-neutral-300/25 px-14 py-5 transition hover:bg-neutral-300/50"
+            @click="$socket.emit('terminatePairing')"
+          >
+            <p class="text-2xl text-white">No</p>
+            <img class="size-28 group-hover:hidden" src="/sprites/chicken/neutral.webp" aria-hidden="true" />
+            <img class="hidden size-28 group-hover:block group-hover:scale-110" src="/sprites/chicken/annoyed.webp" aria-hidden="true" />
+          </div>
         </Transition>
       </div>
     </div>
