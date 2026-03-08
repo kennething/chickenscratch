@@ -11,6 +11,8 @@ import fs from "fs";
 import { queue } from "./utils/data";
 import { Match } from "./utils/types";
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const app = express();
 app.use(cors()).use(express.json());
 
@@ -57,7 +59,12 @@ setInterval(() => {
   new Match(
     [player1.socket, player2.socket],
     (newSplit, newWord) => io.to(player1Uuid).to(player2Uuid).emit("advanceSplit", newSplit, newWord),
-    () => io.to(player1Uuid).to(player2Uuid).emit("endGame")
+    (match) => {
+      // player 1 wins in draws but idrc
+      const player1DidWin = match.players.find(([uuid]) => uuid === player1Uuid)![2] > match.players.find(([uuid]) => uuid === player2Uuid)![2];
+      io.to(player1Uuid).emit("endGame", player1DidWin);
+      io.to(player2Uuid).emit("endGame", !player1DidWin);
+    }
   );
 
   player1.callback(true);

@@ -22,7 +22,7 @@ export interface ServerToClientEvents {
   /** tell main socket to advance to the next split */
   advanceSplit: (newSplit: number, newWord: string) => void;
   /** tell main socket to end the game */
-  endGame: () => void;
+  endGame: (didWin: boolean) => void;
 }
 
 export interface ClientToServerEvents {

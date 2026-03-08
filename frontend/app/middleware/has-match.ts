@@ -1,4 +1,4 @@
 export default defineNuxtRouteMiddleware(() => {
   const userStore = useUserStore();
-  if (!userStore.pairingCode) return navigateTo("/");
+  if (userStore.currentWordIndex === undefined) return navigateTo("/");
 });

@@ -1,11 +1,10 @@
 <template>
-  <div class="mr-100 flex min-h-svh w-full flex-col items-center justify-center">
-    <h1>Match found!</h1>
-    <p>Are you ready to start?</p>
-    <p>Make sure your paper is centered!</p>
-    <button @click="confirmMatch">yes</button>
-
-    <p v-show="isConfirmed">waiting for other player...</p>
+  <div class="mr-104 flex min-h-svh w-full flex-col items-center justify-center">
+    <h1 class="title text-6xl font-medium text-white">Match found!</h1>
+    <p class="mt-10 text-xl text-neutral-200">Are you ready to start?</p>
+    <p class="mb-10 text-2xl font-medium text-neutral-100">Make sure your paper is centered!</p>
+    <button @click="confirmMatch" class="rounded-3xl bg-indigo-500 px-10 py-4 text-3xl font-medium text-white">Ready</button>
+    <p v-show="isConfirmed" class="text-xl text-neutral-200">Waiting for other player...</p>
   </div>
 </template>
 

@@ -9,6 +9,7 @@ export const useUserStore = defineStore("userStore", () => {
 
   const currentWordIndex = ref<number>();
   const wordHistory = ref<string[]>([]);
+  const gameWon = ref(false);
 
-  return { pairingCode, currentBackground, videoFeedOptions, currentWordIndex, wordHistory };
+  return { pairingCode, currentBackground, videoFeedOptions, currentWordIndex, wordHistory, gameWon };
 });

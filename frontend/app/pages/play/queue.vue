@@ -1,13 +1,13 @@
 <template>
-  <div class="flex min-h-svh flex-col items-center justify-center">
+  <div class="flex min-h-svh flex-col items-center justify-center gap-18">
     <span class="loading loading-bars"></span>
-    <h1 class="title text-5xl">Looking for an opponent...</h1>
+    <h1 class="title text-5xl text-cyan-950">Looking for an opponent...</h1>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  background: "grove",
+  background: "dory",
   middleware: "has-pair",
   layout: "connected"
 });
