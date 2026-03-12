@@ -2,6 +2,11 @@
 
 Uses Nuxt 4 to create a web UI for the game.
 
+## Attributions
+
+- [Backgrounds](./public/backgrounds) by [@wwormseason](https://github.com/wwormseason)
+- [Chicken spirtes](./public/sprites/chicken) by [@inconveniencestore](https://github.com/inconveniencestore)
+
 ## Setup Instructions
 
 1. Ensure Node.js is installed on your machine.
