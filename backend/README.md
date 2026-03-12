@@ -1,39 +1,41 @@
 # Backend
 
-written with express and socket.io
+Uses Express and Socket.IO to establish websocket connections between phone and
+laptop clients, and also between players in matchmaking.
 
-## Project Setup
+## Setup Instructions
 
-1. ensure node.js and openssl are installed
+1. Ensure Node.js and OpenSSL are installed on your machine.
 
-2. select backend directory
+2. Select this directory:
 
 ```sh
 cd backend
 ```
 
-3. install node modules
+3. Install dependencies:
 
 ```sh
 npm install
 ```
 
-4. create https certificates
+4. Create self-signed HTTPS certificates:
 
 ```sh
-openssl req -new -x509 -nodes -out cert.pem -keyout key.pem -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -days 14 -subj '/CN=<ip>'
+openssl req -new -x509 -nodes -out cert.pem -keyout key.pem -newkey ec \
+  -pkeyopt ec_paramgen_curve:prime256v1 -days 14 -subj '/CN=<ip>'
 ```
 
-where `<ip>` is your local network IP address, which you can find somewhere probably. check ur wifi settings idk
+where `<ip>` is your local network IP address.
 
-5. create .env
+5. Create a `.env` file in this directory with the following content:
 
 ```sh
 FRONTEND_URL=https://<ip>:3000 # url of the frontend
 BACKEND_URL=https://<ip>:8000 # url of the model backend server
 ```
 
-6. run the server
+6. Run the server:
 
 ```sh
 npm run serve

@@ -1,5 +1,11 @@
+<img src="./frontend/public/sprites/chicken/proud.webp" height="100" />
+
 # Setup Instructions
 
-1. run the [backend](./backend/README.md) first
+Follow the instructions in the order below to set up the project.
 
-2. then run the [frontend](./frontend/README.md)
+1. Set up the [backend](./backend/README.md) first
+
+2. Then set up the [model](./model/README.md)
+
+3. Then set up the [frontend](./frontend/README.md)
