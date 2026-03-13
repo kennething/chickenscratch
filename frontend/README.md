@@ -13,26 +13,26 @@ Uses Nuxt 4 to create a web UI for the game.
 
 2. Select this directory:
 
-```sh
-cd frontend
-```
+   ```sh
+   cd frontend
+   ```
 
 3. Install dependencies:
 
-```sh
-npm install
-```
+   ```sh
+   npm install
+   ```
 
 4. Create a `.env` file in this directory with the following content:
 
-```sh
-NUXT_PUBLIC_BACKEND_URL=https://<ip>:8008 # dont append /
-```
+   ```sh
+   NUXT_PUBLIC_BACKEND_URL=https://<ip>:8008 # dont append /
+   ```
 
-where `<ip>` is your local network IP address.
+   where `<ip>` is your local network IP address.
 
 5. Run the development server on your network:
 
-```sh
-npm run dev -- --https --host=<ip>
-```
+   ```sh
+   npm run dev -- --https --host=<ip>
+   ```
