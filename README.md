@@ -2,7 +2,8 @@
 
 # ChickenScratch - HackBU 2026 Submission
 
-Created by Kenneth Ng, Tiffany Lin, and Ryan Zhou for HackBU 2026.
+Created by Kenneth Ng, Tiffany Lin, and Ryan Zhou for HackBU 2026. (Runner-Up
+of Best Beginner Hack Award)
 
 ## Program Purpose
 
@@ -30,6 +31,21 @@ Our backend (Express) converts Base64 strings into images, enhances them, and
 processes them through a YOLO-trained model (FastAPI). Every 30 seconds, the
 words become harder, and correct answers earn points. At the end, the player
 with the most points wins, displaying either a winner or loser screen.
+
+## Our Tech Stack
+
+- Frontend:
+  - Nuxt.js (Vue.js) + TypeScript
+  - TailwindCSS
+    - DaisyUI
+- Backend:
+  - Express.js + TypeScript
+  - Socket.IO
+- Model:
+  - FastAPI (Python)
+  - YOLOv8 (Ultralytics)
+  - OpenCV
+  - our blood sweat and tears
 
 ## AI Usage
 
